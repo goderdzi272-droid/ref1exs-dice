@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REF1EXS DICE</title>
+<style>
+:root{--gold:#ffd400;--bg:#050505;--panel:#0b0b0b;--muted:#888}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 35%,#211900 0,#090909 42%,#030303 100%);color:#fff;font-family:Arial,Helvetica,sans-serif;display:flex;justify-content:center;align-items:center;padding:22px}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#ffd40099 1px,transparent 1.5px);background-size:83px 83px;opacity:.3}
+.panel{position:relative;width:min(100%,510px);padding:30px 26px 25px;border:2px solid var(--gold);border-radius:25px;background:rgba(8,8,8,.96);box-shadow:0 0 30px #ffd40030;text-align:center}
+.tag{display:inline-block;background:linear-gradient(90deg,#ffdb00,#ff9700);color:#090909;border-radius:30px;padding:7px 15px;font-size:11px;font-weight:900;letter-spacing:2px;box-shadow:0 0 15px #ffc40070}
+.logo{width:88px;height:88px;margin:17px auto 12px;border-radius:50%;border:3px solid var(--gold);display:grid;place-items:center;background:linear-gradient(135deg,#1b1b1b,#393000);font-size:34px;box-shadow:0 0 18px #ffd40055}
+h1{margin:8px 0 23px;font-size:25px;letter-spacing:3px;color:#ffe000;text-shadow:0 0 12px #ffca00}
+.controls{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:24px;font-weight:bold;letter-spacing:1px;color:var(--gold)}
+select{background:#080808;color:#fff;border:2px solid var(--gold);border-radius:10px;padding:9px 12px;font-weight:bold;font-size:15px}
+.dice{display:flex;justify-content:center;flex-wrap:wrap;gap:13px;min-height:80px;margin:0 auto 22px}
+.die{width:78px;height:78px;border-radius:19px;border:2px solid #ffffff38;box-shadow:0 0 20px currentColor;transition:background .25s;transform-style:preserve-3d}
+.die.spinning{animation:diceSpin .75s cubic-bezier(.2,.8,.2,1) both}
+@keyframes diceSpin{0%{transform:rotate(0deg) scale(1)}25%{transform:rotate(180deg) scale(.78)}55%{transform:rotate(390deg) scale(1.12)}80%{transform:rotate(650deg) scale(.94)}100%{transform:rotate(720deg) scale(1)}}
+@media(prefers-reduced-motion:reduce){.die.spinning{animation:none}}
+button{cursor:pointer;border:0;font-weight:900;letter-spacing:2px}
+.roll{padding:17px 31px;border-radius:14px;background:linear-gradient(90deg,#ffdb00,#ff9900);color:#080808;font-size:17px;box-shadow:0 0 22px #ffbf0060}
+.roll:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.counter{margin:19px auto 0;padding:11px 10px;border:2px solid var(--gold);border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.counter button{background:#111;color:var(--gold);border:1px solid var(--gold);border-radius:9px;padding:8px 10px;font-size:12px}
+.count{min-width:42px;font-size:26px;font-weight:900;color:var(--gold);text-shadow:0 0 12px #ffd400}
+.subtitle{color:var(--gold);font-size:12px;letter-spacing:1px;margin:18px 0 10px}
+.palette{display:flex;justify-content:center;gap:11px;margin-bottom:12px}
+.dot{width:21px;height:21px;border-radius:50%;border:2px solid #ffffff55;box-shadow:0 0 10px currentColor}
+.credit{font-size:10px;color:#c7a900;letter-spacing:1px}
+.history{margin-top:20px;border-top:1px solid #3a3100;padding-top:16px;text-align:left}
+.history h3{margin:0 0 10px;color:var(--gold);font-size:13px;letter-spacing:1px}
+#historyList{display:flex;flex-wrap:wrap;gap:7px;min-height:23px}
+.history-chip{width:22px;height:22px;border-radius:6px;border:1px solid #ffffff55;box-shadow:0 0 8px currentColor}
+.empty{color:var(--muted);font-size:12px}
+@media(max-width:420px){.panel{padding:24px 15px}.die{width:64px;height:64px}.roll{font-size:15px;padding:15px 23px}h1{font-size:21px}}
+</style>
+</head>
+<body>
+<main class="panel">
+  <div class="tag">✦ YOUR COLOR DICE ✦</div>
+  <div class="logo">🎲</div>
+  <h1>REF1EXS DICE</h1>
+  <div class="controls">
+    <label for="diceCount">DICE COUNT:</label>
+    <select id="diceCount"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+  </div>
+  <div class="dice" id="dice"></div>
+  <button class="roll" id="roll">ROLL COLOR 🎲</button>
+  <div class="counter">
+    <button data-step="-10">-10</button><button data-step="-1">-1</button>
+    <span class="count" id="total">0</span>
+    <button data-step="1">+1</button><button data-step="10">+10</button>
+  </div>
+  <div class="subtitle">STANDARD DICE COLORS:</div>
+  <div class="palette" aria-label="Standard colors">
+    <span class="dot" style="background:#ff303b;color:#ff303b"></span>
+    <span class="dot" style="background:#287bff;color:#287bff"></span>
+    <span class="dot" style="background:#21ef43;color:#21ef43"></span>
+    <span class="dot" style="background:#ffe500;color:#ffe500"></span>
+    <span class="dot" style="background:#ff7900;color:#ff7900"></span>
+    <span class="dot" style="background:#b522ff;color:#b522ff"></span>
+  </div>
+  <div class="credit">MADE FOR YOU ✦ REF1EXS</div>
+  <section class="history">
+    <h3>HISTORY (LAST 10 ROLLS):</h3>
+    <div id="historyList"><span class="empty">No rolls yet...</span></div>
+  </section>
+</main>
+<script>
+const colors=["#ff303b","#287bff","#21ef43","#ffe500","#ff7900","#b522ff"];
+const diceEl=document.getElementById("dice"), countEl=document.getElementById("diceCount");
+const totalEl=document.getElementById("total"), historyEl=document.getElementById("historyList");
+let total=0, history=[];
+function renderDice(values, animate=false){
+  diceEl.innerHTML="";
+  values.forEach(color=>{
+    const die=document.createElement("div");
+    die.className="die"+(animate ? " spinning" : "");
+    die.style.background=color;
+    die.style.color=color;
+    diceEl.appendChild(die);
+  });
+}
+function roll(){
+  const n=Number(countEl.value), values=Array.from({length:n},()=>colors[Math.floor(Math.random()*colors.length)]);
+  renderDice(values, true); total++; totalEl.textContent=total;
+  history.unshift(values);history=history.slice(0,10);
+  historyEl.innerHTML="";
+  history.forEach((roll,index)=>{const group=document.createElement("div");group.style.display="flex";group.style.gap="3px";group.style.padding="3px 5px";group.style.border="1px solid #5c4d00";group.style.borderRadius="7px";group.title=`Roll ${history.length-index}`;
+    roll.forEach(color=>{const chip=document.createElement("span");chip.className="history-chip";chip.style.background=color;chip.style.color=color;group.appendChild(chip)});historyEl.appendChild(group)});
+}
+document.getElementById("roll").addEventListener("click",roll);
+countEl.addEventListener("change",()=>renderDice(Array(Number(countEl.value)).fill("#242424")));
+document.querySelectorAll("[data-step]").forEach(button=>button.addEventListener("click",()=>{total=Math.max(0,total+Number(button.dataset.step));totalEl.textContent=total}));
+renderDice(Array(Number(countEl.value)).fill("#242424"));
+</script>
+</body>
+</html>
